@@ -38,19 +38,19 @@ module.exports = {
     try {
       console.log('Logging in user with data:', req.body);
       const { email, password, rememberMe } = req.body;
-
+  
       const user = await User.findOne({ email });
       if (!user) {
         return res.status(400).json({ message: 'Invalid credentials' });
       }
-
+  
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
         return res.status(400).json({ message: 'Invalid credentials' });
       }
-
+  
       const token = createJWT(user, rememberMe);
-
+  
       console.log('User logged in successfully:', user);
       res.json({ user, token });
     } catch (error) {

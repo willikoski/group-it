@@ -1,6 +1,6 @@
 class Test {
 	main = () => {
-		console.log('no other instructors got swagger like us');
+		console.log('no other instructors got swagger like us - From the Great Arthur');
 	};
 }
 // test

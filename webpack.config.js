@@ -69,6 +69,12 @@ module.exports = env => {
 			},
 			usedExports: true,
 			sideEffects: true
+		},
+		devServer: {
+			historyApiFallback: true, // Serve index.html for all routes
+			contentBase: path.resolve(__dirname, 'public'),
+			compress: true,
+			port: 3000
 		}
 	};
 };

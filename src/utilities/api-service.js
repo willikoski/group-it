@@ -70,9 +70,9 @@ export async function login(credentials) {
       throw new Error(errorData.message || 'Login failed');
     }
 
-    const token = await response.json();
+    const { user, token } = await response.json();
     localStorage.setItem('token', token);
-    return await getUser();
+    return user;
   } catch (error) {
     console.error('Login Error:', error);
     throw new Error('Login failed');

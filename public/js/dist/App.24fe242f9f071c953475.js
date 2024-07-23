@@ -19,6 +19,8 @@
 /* harmony import */ var _components_ResetPassword_ResetPassword__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/ResetPassword/ResetPassword */ "./src/components/ResetPassword/ResetPassword.js");
 /* harmony import */ var _pages_ProfilePage_ProfilePage__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./pages/ProfilePage/ProfilePage */ "./src/pages/ProfilePage/ProfilePage.js");
 /* harmony import */ var _components_Home_Home__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/Home/Home */ "./src/components/Home/Home.js");
+/* harmony import */ var _utilities_api_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./utilities/api-service */ "./src/utilities/api-service.js");
+
 
 
 
@@ -28,17 +30,17 @@
 
 function App() {
   const [user, setUser] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  const navigate = (0,react_router_dom__WEBPACK_IMPORTED_MODULE_6__.useNavigate)();
   const handleLogout = () => {
-    setUser(null);
+    _utilities_api_service__WEBPACK_IMPORTED_MODULE_7__.logOut();
+    setUser(null); // Update user state
+    navigate('/auth'); // Redirect to login page
   };
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     className: "App"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_6__.Routes, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_6__.Route, {
     path: "/",
-    element: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_Home_Home__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      user: user,
-      setUser: setUser
-    })
+    element: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_Home_Home__WEBPACK_IMPORTED_MODULE_5__["default"], null)
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_6__.Route, {
     path: "/auth",
     element: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_pages_AuthPage_Authpage__WEBPACK_IMPORTED_MODULE_1__["default"], {
@@ -58,6 +60,7 @@ function App() {
     path: "/profile/:userId",
     element: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_pages_ProfilePage_ProfilePage__WEBPACK_IMPORTED_MODULE_4__["default"], {
       user: user,
+      setUser: setUser,
       onLogout: handleLogout
     })
   })));
@@ -825,12 +828,13 @@ const ProfilePage = _ref => {
 
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   getToken: () => (/* binding */ getToken),
+/* harmony export */   logOut: () => (/* binding */ logOut),
 /* harmony export */   login: () => (/* binding */ login),
 /* harmony export */   resetPassword: () => (/* binding */ resetPassword),
 /* harmony export */   signUp: () => (/* binding */ signUp),
 /* harmony export */   updatePasswordWithToken: () => (/* binding */ updatePasswordWithToken)
 /* harmony export */ });
-/* unused harmony exports getUser, getProfileUser, indexUsers, logOut */
+/* unused harmony exports getUser, getProfileUser, indexUsers */
 /* harmony import */ var _users_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./users-api */ "./src/utilities/users-api.js");
 
 const BASE_URL = '/api/users';
@@ -895,9 +899,12 @@ async function login(credentials) {
       const errorData = await response.json();
       throw new Error(errorData.message || 'Login failed');
     }
-    const token = await response.json();
+    const {
+      user,
+      token
+    } = await response.json();
     localStorage.setItem('token', token);
-    return await getUser();
+    return user;
   } catch (error) {
     console.error('Login Error:', error);
     throw new Error('Login failed');
@@ -1042,7 +1049,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `@keyframes Zc6uiYv2ixSANn506Sh4 {
   }
 }
 body {
-  height: 110vh;
+  height: 100vh;
   width: 100%;
   background: linear-gradient(to bottom right, #7bbd86, #16523c);
 }
@@ -1151,7 +1158,7 @@ body {
 }
 .IFrs_wH6ZfFHkHIS8B6M ._uR7x4NFZTbsc3UtpAtZ:hover {
   background-color: rgba(255, 255, 255, 0.5);
-}`, "",{"version":3,"sources":["webpack://./src/components/ForgotPasswordForm/ForgotPasswordForm.module.scss"],"names":[],"mappings":"AAAA;EACE;IACE,iFAAA;EACF;EAEA;IACE,qFAAA;EAAF;EAGA;IACE,qFAAA;EADF;EAIA;IACE,uFAAA;EAFF;AACF;AAMA;EACE,aAAA;EACE,WAAA;EACA,8DAAA;AAJJ;;AAOA;EACI,eAAA;EACA,QAAA;EACA,SAAA;EACA,gCAAA;EACA,6BAAA;EACA,gBAAA;EACA,eAAA;EACA,eAAA;EACA,8DAAA;EACA,uBAAA;EACA,mBAAA;EACA,kBAAA;EACA,yBAAA;EACG,sBAAA;EACK,iBAAA;EACR,gBAAA;EACA,kDAAA;AAJJ;AAMI;EACE,eAAA;EACA,kBAAA;EACA,mBAAA;EACA,0BAAA;EACA,YAAA;AAJN;AAOI;EACE,mBAAA;AALN;AAOM;EACE,iBAAA;EACA,kBAAA;EACA,YAAA;EACA,oBAAA;AALR;AAQM;EACE,eAAA;EACA,uBAAA;EACA,YAAA;EACA,8BAAA;EACA,iBAAA;EACA,aAAA;EACA,gBAAA;EACA,YAAA;EACA,yCAAA,EAAA,2CAAA;EACA,WAAA;EACA,mBAAA;EACA,UAAA;AANR;AASM;EACE,yBAAA,EAAA,wCAAA;AAPR;AAWI;EACE,cAAA;EACA,eAAA;EACA,eAAA;EACA,gBAAA;AATN;AAYI;EACE,cAAA;EACA,iBAAA;EACA,eAAA;EACA,kBAAA;AAVN;AAaI;EACE,YAAA;EACA,WAAA;EACA,YAAA;EACA,mBAAA;EACA,mCAAA;EACA,YAAA;EACA,aAAA;EACA,eAAA;EACA,kBAAA;EACA,gBAAA;EACA,oBAAA;EACA,mBAAA;EACA,uBAAA;EACA,qBAAA;EACA,yBAAA;EACA,mBAAA;AAXN;AAaM;EACE,0CAAA;AAXR;AAeI;EACE,YAAA;EACA,mBAAA;EACA,mCAAA;EACA,YAAA;EACA,aAAA;EACA,eAAA;EACA,kBAAA;EACA,gBAAA;EACA,mBAAA;EACA,sBAAA;EACA,WAAA;EACA,yBAAA;EACA,oBAAA;EACA,mBAAA;EACA,uBAAA;AAbN;AAeM;EACE,0CAAA;AAbR","sourcesContent":["@keyframes shine {\r\n  0%, 100% {\r\n    box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.2), \r\n                inset 0 0 2px 1px rgba(0, 0, 0, 0.2);\r\n  }\r\n  25% {\r\n    box-shadow: 1px 0 10px 1px rgba(0, 0, 0, 0.2), \r\n                inset 1px 0 2px 1px rgba(0, 0, 0, 0.2);\r\n  }\r\n  50% {\r\n    box-shadow: 0 1px 10px 1px rgba(0, 0, 0, 0.2), \r\n                inset 0 1px 2px 1px rgba(0, 0, 0, 0.2);\r\n  }\r\n  75% {\r\n    box-shadow: -1px 0 10px 1px rgba(0, 0, 0, 0.2), \r\n                inset -1px 0 2px 1px rgba(0, 0, 0, 0.2);\r\n  }\r\n}\r\n\r\nbody {\r\n  height: 110vh;\r\n    width: 100%;\r\n    background: linear-gradient(to bottom right, #7bbd86, #16523c);\r\n}\r\n\r\n.container {\r\n    position: fixed;\r\n    top: 50%;\r\n    left: 50%;\r\n    transform: translate(-50%, -50%);\r\n    border-bottom: 2px solid #ccc;\r\n    box-shadow: none;\r\n    min-width: 30vh;\r\n    max-width: 70vh;\r\n    background: linear-gradient(to bottom right, #7bbd86, #1f644b);\r\n    border: 1px solid black;\r\n    border-radius: 20px;\r\n    padding: 2rem 3rem;\r\n    -webkit-user-select: none;\r\n       -moz-user-select: none;\r\n            user-select: none;\r\n    overflow: hidden;\r\n    animation: shine 5s infinite linear;\r\n  \r\n    .title {\r\n      font-size: 2rem;\r\n      text-align: center;\r\n      margin-bottom: 20px;\r\n      font-family: \"Inter Tight\";\r\n      color: white;\r\n    }\r\n  \r\n    .formGroup {\r\n      margin-bottom: 20px;\r\n  \r\n      .label {\r\n        font-size: 1.2rem;\r\n        margin-bottom: 5px;\r\n        color: white;\r\n        margin-right: .5rem;\r\n      }\r\n  \r\n      .input {\r\n        min-width: 30vw;\r\n        background: transparent;\r\n        border: none;\r\n        border-bottom: 1px solid white;\r\n        font-size: 1.2rem;\r\n        padding: 1rem;\r\n        border-radius: 0;\r\n        color: white;\r\n        transition: border-bottom-color 0.3s ease; /* Add transition for border-bottom color */\r\n        width: 30vh;\r\n        font-weight: bolder;\r\n        padding: 0;\r\n      }\r\n  \r\n      .input:focus {\r\n        border-bottom-color: gold; /* Change border-bottom color on focus */\r\n      }\r\n    }\r\n  \r\n    .error {\r\n      color: #ff0000;\r\n      font-size: 1rem;\r\n      margin-top: 3px;\r\n      margin-left: 5px;\r\n    }\r\n  \r\n    .success {\r\n      color: #00cc00;\r\n      font-size: 1.5rem;\r\n      margin-top: 5px;\r\n      text-align: center;\r\n    }\r\n  \r\n    .button {\r\n      color: white;\r\n      width: 100%;\r\n      height: 40px;\r\n      border-radius: 40px;\r\n      background-color: rgb(87, 163, 115);\r\n      border: none;\r\n      outline: none;\r\n      cursor: pointer;\r\n      font-size: 1.25rem;\r\n      font-weight: 600;\r\n      display: inline-flex;\r\n      align-items: center;\r\n      justify-content: center;\r\n      text-decoration: none;\r\n      transition: all 0.4s ease;\r\n      margin-bottom: 1rem;\r\n    \r\n      &:hover {\r\n        background-color: rgba(255, 255, 255, 0.5);\r\n      }\r\n    }\r\n  \r\n    .link {\r\n      color: white;\r\n      border-radius: 40px;\r\n      background-color: rgb(87, 163, 115);\r\n      border: none;\r\n      outline: none;\r\n      cursor: pointer;\r\n      font-size: 1.25rem;\r\n      font-weight: 600;\r\n      padding-top: .4rem;\r\n      padding-bottom: .4rem;\r\n      width: 100%;\r\n      transition: all 0.4s ease;\r\n      display: inline-flex;\r\n      align-items: center;\r\n      justify-content: center;\r\n  \r\n      &:hover {\r\n        background-color: rgba(255, 255, 255, 0.5);\r\n      }\r\n    }\r\n  }\r\n  "],"sourceRoot":""}]);
+}`, "",{"version":3,"sources":["webpack://./src/components/ForgotPasswordForm/ForgotPasswordForm.module.scss"],"names":[],"mappings":"AAAA;EACE;IACE,iFAAA;EACF;EAEA;IACE,qFAAA;EAAF;EAGA;IACE,qFAAA;EADF;EAIA;IACE,uFAAA;EAFF;AACF;AAMA;EACE,aAAA;EACE,WAAA;EACA,8DAAA;AAJJ;;AAOA;EACI,eAAA;EACA,QAAA;EACA,SAAA;EACA,gCAAA;EACA,6BAAA;EACA,gBAAA;EACA,eAAA;EACA,eAAA;EACA,8DAAA;EACA,uBAAA;EACA,mBAAA;EACA,kBAAA;EACA,yBAAA;EACG,sBAAA;EACK,iBAAA;EACR,gBAAA;EACA,kDAAA;AAJJ;AAMI;EACE,eAAA;EACA,kBAAA;EACA,mBAAA;EACA,0BAAA;EACA,YAAA;AAJN;AAOI;EACE,mBAAA;AALN;AAOM;EACE,iBAAA;EACA,kBAAA;EACA,YAAA;EACA,oBAAA;AALR;AAQM;EACE,eAAA;EACA,uBAAA;EACA,YAAA;EACA,8BAAA;EACA,iBAAA;EACA,aAAA;EACA,gBAAA;EACA,YAAA;EACA,yCAAA,EAAA,2CAAA;EACA,WAAA;EACA,mBAAA;EACA,UAAA;AANR;AASM;EACE,yBAAA,EAAA,wCAAA;AAPR;AAWI;EACE,cAAA;EACA,eAAA;EACA,eAAA;EACA,gBAAA;AATN;AAYI;EACE,cAAA;EACA,iBAAA;EACA,eAAA;EACA,kBAAA;AAVN;AAaI;EACE,YAAA;EACA,WAAA;EACA,YAAA;EACA,mBAAA;EACA,mCAAA;EACA,YAAA;EACA,aAAA;EACA,eAAA;EACA,kBAAA;EACA,gBAAA;EACA,oBAAA;EACA,mBAAA;EACA,uBAAA;EACA,qBAAA;EACA,yBAAA;EACA,mBAAA;AAXN;AAaM;EACE,0CAAA;AAXR;AAeI;EACE,YAAA;EACA,mBAAA;EACA,mCAAA;EACA,YAAA;EACA,aAAA;EACA,eAAA;EACA,kBAAA;EACA,gBAAA;EACA,mBAAA;EACA,sBAAA;EACA,WAAA;EACA,yBAAA;EACA,oBAAA;EACA,mBAAA;EACA,uBAAA;AAbN;AAeM;EACE,0CAAA;AAbR","sourcesContent":["@keyframes shine {\r\n  0%, 100% {\r\n    box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.2), \r\n                inset 0 0 2px 1px rgba(0, 0, 0, 0.2);\r\n  }\r\n  25% {\r\n    box-shadow: 1px 0 10px 1px rgba(0, 0, 0, 0.2), \r\n                inset 1px 0 2px 1px rgba(0, 0, 0, 0.2);\r\n  }\r\n  50% {\r\n    box-shadow: 0 1px 10px 1px rgba(0, 0, 0, 0.2), \r\n                inset 0 1px 2px 1px rgba(0, 0, 0, 0.2);\r\n  }\r\n  75% {\r\n    box-shadow: -1px 0 10px 1px rgba(0, 0, 0, 0.2), \r\n                inset -1px 0 2px 1px rgba(0, 0, 0, 0.2);\r\n  }\r\n}\r\n\r\nbody {\r\n  height: 100vh;\r\n    width: 100%;\r\n    background: linear-gradient(to bottom right, #7bbd86, #16523c);\r\n}\r\n\r\n.container {\r\n    position: fixed;\r\n    top: 50%;\r\n    left: 50%;\r\n    transform: translate(-50%, -50%);\r\n    border-bottom: 2px solid #ccc;\r\n    box-shadow: none;\r\n    min-width: 30vh;\r\n    max-width: 70vh;\r\n    background: linear-gradient(to bottom right, #7bbd86, #1f644b);\r\n    border: 1px solid black;\r\n    border-radius: 20px;\r\n    padding: 2rem 3rem;\r\n    -webkit-user-select: none;\r\n       -moz-user-select: none;\r\n            user-select: none;\r\n    overflow: hidden;\r\n    animation: shine 5s infinite linear;\r\n  \r\n    .title {\r\n      font-size: 2rem;\r\n      text-align: center;\r\n      margin-bottom: 20px;\r\n      font-family: \"Inter Tight\";\r\n      color: white;\r\n    }\r\n  \r\n    .formGroup {\r\n      margin-bottom: 20px;\r\n  \r\n      .label {\r\n        font-size: 1.2rem;\r\n        margin-bottom: 5px;\r\n        color: white;\r\n        margin-right: .5rem;\r\n      }\r\n  \r\n      .input {\r\n        min-width: 30vw;\r\n        background: transparent;\r\n        border: none;\r\n        border-bottom: 1px solid white;\r\n        font-size: 1.2rem;\r\n        padding: 1rem;\r\n        border-radius: 0;\r\n        color: white;\r\n        transition: border-bottom-color 0.3s ease; /* Add transition for border-bottom color */\r\n        width: 30vh;\r\n        font-weight: bolder;\r\n        padding: 0;\r\n      }\r\n  \r\n      .input:focus {\r\n        border-bottom-color: gold; /* Change border-bottom color on focus */\r\n      }\r\n    }\r\n  \r\n    .error {\r\n      color: #ff0000;\r\n      font-size: 1rem;\r\n      margin-top: 3px;\r\n      margin-left: 5px;\r\n    }\r\n  \r\n    .success {\r\n      color: #00cc00;\r\n      font-size: 1.5rem;\r\n      margin-top: 5px;\r\n      text-align: center;\r\n    }\r\n  \r\n    .button {\r\n      color: white;\r\n      width: 100%;\r\n      height: 40px;\r\n      border-radius: 40px;\r\n      background-color: rgb(87, 163, 115);\r\n      border: none;\r\n      outline: none;\r\n      cursor: pointer;\r\n      font-size: 1.25rem;\r\n      font-weight: 600;\r\n      display: inline-flex;\r\n      align-items: center;\r\n      justify-content: center;\r\n      text-decoration: none;\r\n      transition: all 0.4s ease;\r\n      margin-bottom: 1rem;\r\n    \r\n      &:hover {\r\n        background-color: rgba(255, 255, 255, 0.5);\r\n      }\r\n    }\r\n  \r\n    .link {\r\n      color: white;\r\n      border-radius: 40px;\r\n      background-color: rgb(87, 163, 115);\r\n      border: none;\r\n      outline: none;\r\n      cursor: pointer;\r\n      font-size: 1.25rem;\r\n      font-weight: 600;\r\n      padding-top: .4rem;\r\n      padding-bottom: .4rem;\r\n      width: 100%;\r\n      transition: all 0.4s ease;\r\n      display: inline-flex;\r\n      align-items: center;\r\n      justify-content: center;\r\n  \r\n      &:hover {\r\n        background-color: rgba(255, 255, 255, 0.5);\r\n      }\r\n    }\r\n  }\r\n  "],"sourceRoot":""}]);
 // Exports
 ___CSS_LOADER_EXPORT___.locals = {
 	"container": `IFrs_wH6ZfFHkHIS8B6M`,
@@ -2874,4 +2881,4 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 /******/ 	
 /******/ })()
 ;
-//# sourceMappingURL=App.bd4a7d26acede12b836be4b81a7a7e0b.js.map
+//# sourceMappingURL=App.fd57a573585ef5f11ba5719360b9cbf0.js.map

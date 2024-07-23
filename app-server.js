@@ -14,7 +14,7 @@ app.use((req, res, next) => {
 });
 app.use(logger('dev')); // Logging
 app.use(favicon(path.join(__dirname, 'public', 'img', 'logo.png'))); // Favicon
-app.use(express.static(path.join(__dirname, 'public'))); // Static files
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Redirect trailing slash to non-trailing slash for all routes
 app.use((req, res, next) => {
@@ -34,6 +34,7 @@ app.use('/api/users', usersRouter); // User routes for signup, login, forgot-pas
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {
