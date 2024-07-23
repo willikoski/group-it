@@ -1,101 +1,55 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import styles from './ProfilePage.module.scss';
-import { useParams } from 'react-router-dom';
-import { getProfileUser } from '../../utilities/api-service';
-// import { getAllPostsByUser } from '../../utilities/api-service';
 
-const ensureHttps = (url) => {
-  if (!url.startsWith('http://') && !url.startsWith('https://')) {
-    return 'https://' + url;
-  }
-  return url;
-};
-
-export default function ProfilePage({ user }) {
-  const [profileUser, setProfileUser] = useState({});
-  const [profilePosts, setProfilePosts] = useState([]);
-  const [isLoadingUser, setIsLoadingUser] = useState(true);
-  const [isLoadingPosts, setIsLoadingPosts] = useState(true);
-  const [isLoggedInUser, setIsLoggedInUser] = useState(false);
-
-  // save profile user from params
-  const { userId } = useParams();  
-  // get loggedInuser from props
-  const loggedInUser = user;
-
-  // get posts of user from db
-  const fetchProfilePosts = async () => {
-    setIsLoadingPosts(true);
-    console.log('User Id:', userId)
-    console.log('About to call API')
-    const foundPosts = await getAllPostsByUser(userId);
-    console.log(foundPosts)
-    setProfilePosts(foundPosts);
-    setIsLoadingPosts(false);
-  }
-
-  // get profile user
-  const fetchProfileUser = async () => {
-    setIsLoadingUser(true);
-    const foundUser = await getProfileUser(userId);
-    setProfileUser(foundUser);
-    setIsLoadingUser(false);
-  };
+const ProfilePage = ({ user, onLogout }) => {
+  const { userId } = useParams();
+  const [profileUser, setProfileUser] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setIsLoggedInUser(!!(userId === loggedInUser?._id));
-  }, [userId, loggedInUser?._id]);
+    const fetchUser = async () => {
+      try {
+        const response = await fetch(`/api/users/${userId}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
+        }
+        const userData = await response.json();
+        setProfileUser(userData);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
 
-  useEffect(() => {
-    fetchProfilePosts();
+    fetchUser();
   }, [userId]);
 
-  useEffect(() => {
-    fetchProfileUser();
-  }, [userId]);
+  if (!user) {
+    return (
+      <div className={styles.loginPrompt}>
+        <p>To view the profile page, please log in.</p>
+        <button onClick={() => navigate('/auth')}>Go to Login</button>
+      </div>
+    );
+  }
+
+  if (!profileUser) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <div className={styles.ProfilePage}>
-      <div className={styles.topContainer}>
-        {isLoadingUser || isLoadingPosts ? (
-          <p>Loading...</p>
-        ) : (
-          <>
-            <div className={styles.userContainer}>
-              <div className={styles.userHeading}>
-                <h2 className={styles.userName}>{profileUser.name}</h2>
-                <div className={styles.imgContainer}>
-                  <ProfileImage className={styles.ProfileImage} user={profileUser} />
-                </div>
-                <div className={styles.userLinks}>
-                  <a
-                    className={styles.ghLink}
-                    href={profileUser.gitHubLink ? ensureHttps(profileUser.gitHubLink) : '#'}
-                    target={profileUser.gitHubLink ? '_blank' : null}
-                  >
-                    <img className={styles.ghLogo} src="https://i.imgur.com/F796Bnt.png" alt="GitHub" />
-                  </a>
-                  <a
-                    className={styles.portfolioLink}
-                    href={profileUser.portfolioLink ? ensureHttps(profileUser.portfolioLink) : '#'}
-                  >
-                    <img className={styles.portfolioLogo} src="https://cdn-icons-png.flaticon.com/128/3683/3683218.png" alt="Portfolio" />
-                  </a>
-                </div>
-              </div>
-              {profileUser.bio ? (
-                <p className={styles.userBio}>{profileUser.bio}</p>
-              ) : (
-                <p className={styles.userBio}>No bio at this time.</p>
-              )}
-            </div>
-            {isLoggedInUser && <FollowList posts={profilePosts} />}
-            {/* <ProfilePostList posts={profilePosts} /> */}
-            
-          </>
-        )}
+    <div className={styles.profileContainer}>
+      <div className={styles.profileContent}>
+        <h1>Profile Page</h1>
+        <div className={styles.userInfo}>
+          <p><strong>Name:</strong> {profileUser.name}</p>
+          <p><strong>Email:</strong> {profileUser.email}</p>
+          <p>add more stuff here?</p>
+        </div>
+        <button className={styles.logoutButton} onClick={onLogout}>Log Out</button>
       </div>
-      <PostList posts={profilePosts} user={loggedInUser} />
     </div>
   );
-}
+};
+
+export default ProfilePage;

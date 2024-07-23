@@ -56,7 +56,7 @@ export default function LoginForm({ setUser, setShowLogin }) {
       const user = await apiService.login(credentials, rememberMe);
       
       setUser(user); // Assuming `user` object contains necessary user data
-      navigate('/'); // Redirect to the home page or dashboard
+      navigate(`/profile/${user._id}`);// Redirect to the home page or dashboard
     } catch (error) {
       setError('Log In Failed - Try Again');
     }

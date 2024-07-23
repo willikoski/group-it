@@ -74,7 +74,7 @@ gulp.task('webpack', cb => {
 });
 
 gulp.task('pull', (cb) => {
-	executionAsyncId('git pull https://github.com/dwheeler7/goose.git', (err, success) => {
+	executionAsyncId('git pull https://github.com/willikoski/group-it.git', (err, success) => {
 		if(err){
 			console.log(err)
 			cb(err)

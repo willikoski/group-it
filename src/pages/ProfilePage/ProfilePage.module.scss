@@ -1,61 +1,65 @@
-.ProfilePage {
-    margin: 10vh auto 0;
-    width: 100%;
-    min-height: 100vh;
-    padding: 2rem 10rem;
+.profileContainer {
     display: flex;
-    .topContainer {
-        width: 60%;
-        max-height: 50rem;
-        .userContainer {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            align-items: center;
-            width: 90%;
-            max-height: 40rem;
-            background: linear-gradient(to bottom right, #7bbd86, #16523c);
-            padding: 2rem;
-            border: .1rem solid rgb(51, 86, 51, 0.3);
-            border-radius: 20px;
-            box-shadow: 0 0 .3rem var(--text-green);
-            .imgContainer {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                width: 15rem;
-            }
-            .userBio {
-                color: black;
-            }
-            .userLinks {
-                width: 15rem;
-                display: flex;
-                justify-content: space-evenly;
-                margin-bottom: 1.5rem;
-                .ghLogo {
-                    background-color: lightgrey;
-                    border-radius: 100%;
-                    width: 4rem;
-                    transition: .3s ease;
-                    &:hover {
-                        filter: invert(100%);
-                        transition: .3s ease;
-                    }
-                }
-                .portfolioLogo {
-                    background-color: lightgrey;
-                    border-radius: 100%;
-                    width: 4rem;
-                    padding: .9rem;
-                    transition: .3s ease;
-                    &:hover {
-                        filter: invert(100%);
-                        transition: .3s ease;
-                    }
-                }
-            }
-        }
-    }
-}
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f9f9f9;
+  }
+  
+  .profileContent {
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .userInfo {
+    margin-top: 20px;
+  }
+  
+  .userInfo p {
+    margin: 10px 0;
+  }
+  
+  .loginPrompt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f2dede;
+    color: #a94442;
+    border: 1px solid #ebccd1;
+    border-radius: 4px;
+    padding: 20px;
+  }
+  
+  .loginPrompt button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #d9534f;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .loginPrompt button:hover {
+    background-color: #c9302c;
+  }
+  
+  .logoutButton {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #d9534f;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .logoutButton:hover {
+    background-color: #c9302c;
+  }
+  

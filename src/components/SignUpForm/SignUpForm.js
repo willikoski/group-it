@@ -11,6 +11,7 @@ export default function SignUpForm({ setUser, setShowLogin }) {
   });
 
   const [error, setError] = useState('');
+  const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
@@ -18,15 +19,25 @@ export default function SignUpForm({ setUser, setShowLogin }) {
     const { name, value } = evt.target;
     setFormData({ ...formData, [name]: value });
     setError('');
+    setErrors({ ...errors, [name]: '' }); // Clear individual field error
     console.log(`${name} changed to:`, value); // Logging each input change
   };
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
+
+    const emailError = validateEmail(formData.email);
+    const passwordError = validatePassword(formData.password);
+
+    if (emailError || passwordError) {
+      setErrors({ email: emailError, password: passwordError });
+      setError('Please fix the errors in the form.');
+      return;
+    }
+
     try {
       console.log('Submitting form with data:', formData); // Log form data
-      const { userType, ...userData } = formData;
-      const user = await apiService.signUp(userData); // Log the response
+      const user = await apiService.signUp(formData); // Log the response
       console.log('User signed up:', user);
       setUser(user);
       navigate(`/profile/${user._id}`);
@@ -34,6 +45,15 @@ export default function SignUpForm({ setUser, setShowLogin }) {
       console.error('Sign Up Failed:', err); // Log the error
       setError('Sign Up Failed - Try Again');
     }
+  };
+
+  const validateEmail = (email) => {
+    if (!email) return 'Email is required';
+    return /^\S+@\S+\.\S+$/.test(email) ? '' : 'Invalid email format';
+  };
+
+  const validatePassword = (password) => {
+    return password.length < 8 ? 'Password must be at least 8 characters long' : '';
   };
 
   const togglePasswordVisibility = () => {
@@ -52,10 +72,12 @@ export default function SignUpForm({ setUser, setShowLogin }) {
           <div className={styles.inputbox}>
             <input type="text" name="name" value={name} onChange={handleChange} required />
             <label>Name</label>
+            {errors.name && <p className={styles.errorText}>{errors.name}</p>}
           </div>
           <div className={styles.inputbox}>
             <input type="text" name="email" value={email} onChange={handleChange} required />
             <label>Email</label>
+            {errors.email && <p className={styles.errorText}>{errors.email}</p>}
           </div>
           <div className={styles.inputbox}>
             <input
@@ -66,6 +88,7 @@ export default function SignUpForm({ setUser, setShowLogin }) {
               required
             />
             <label>Password</label>
+            {errors.password && <p className={styles.errorText}>{errors.password}</p>}
             <span className={styles.showPasswordIcon} onClick={togglePasswordVisibility}>
               {showPassword ? '🔑' : '🛡️'}
             </span>

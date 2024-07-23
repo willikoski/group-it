@@ -1,6 +1,6 @@
 module.exports = (req, res, next) => {
     // Allow access to all routes under /auth without authentication
-    if (req.path.startsWith('/auth')) {
+    if (req.path.startsWith('/')) {
         return next();
     }
 
