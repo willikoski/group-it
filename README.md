@@ -86,9 +86,11 @@ The base endpoint for authentication:
 ### /profile/:userId
 
 - **/profile/:userId:** User profile page.
+  ![Profile Page](public/img/readme/profilepage.png)
+- **Invalid Access:** If a user does not have access to a profile page.
+  ![Profile Page Invalid](public/img/readme/profilepageinvalid.png)
 
 ### /*
 
 - **/NotFound:** Custom 404 NotFound Page
-
-![404 Not Found](public/img/readme/404notfound.png)
+  ![404 Not Found](public/img/readme/404notfound.png)
