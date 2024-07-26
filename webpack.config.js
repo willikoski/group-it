@@ -12,6 +12,7 @@ module.exports = env => {
 		},
 		output: {
 			path: path.resolve(__dirname, 'public/js/dist'),
+			publicPath: '/js/dist', // ADDED from classroom
 			filename: '[name].[contenthash].js', // '[name].[contenthash].js' put this if you want to get hashed files to cache bust
 			sourceMapFilename: "[name].[contenthash].js.map"
 		},
@@ -69,12 +70,6 @@ module.exports = env => {
 			},
 			usedExports: true,
 			sideEffects: true
-		},
-		devServer: {
-			historyApiFallback: true, // Serve index.html for all routes
-			contentBase: path.resolve(__dirname, 'public'),
-			compress: true,
-			port: 3000
 		}
 	};
 };

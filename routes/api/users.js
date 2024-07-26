@@ -23,6 +23,6 @@ router.get('/check-token', ensureLoggedIn, (req, res) => {
 router.post('/reset-password', resetPassword);
 
 // POST /api/users/reset-password/:token
-router.post('/reset-password/:token', updatePasswordWithToken);
+router.put('/reset-password/:token', updatePasswordWithToken);
 
 module.exports = router;

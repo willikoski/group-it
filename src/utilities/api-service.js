@@ -54,7 +54,7 @@ export async function signUp(userData) {
   return getUser();
 }
 
-export async function login(credentials) {
+export async function login(credentials, rememberMe) {
   try {
     console.log('Logging in with credentials:', credentials);
     const response = await fetch(`${BASE_URL}/login`, {
@@ -62,7 +62,7 @@ export async function login(credentials) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(credentials),
+      body: JSON.stringify({ ...credentials, rememberMe }),
     });
 
     if (!response.ok) {
@@ -72,6 +72,14 @@ export async function login(credentials) {
 
     const { user, token } = await response.json();
     localStorage.setItem('token', token);
+
+    ///// if you want to add a sessionStorage instead of the JWT tokens in the controller page ////
+    // if (rememberMe) {
+    //   localStorage.setItem('token', token);
+    // } else {
+    //   sessionStorage.setItem('token', token);
+    // }
+
     return user;
   } catch (error) {
     console.error('Login Error:', error);

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import styles from './ResetPassword.module.scss'; 
+import { useParams, Link } from 'react-router-dom';
+import styles from './ResetPassword.module.scss';
 import * as apiService from '../../utilities/api-service'; // Adjust import path as per your file structure
 
 export default function ResetPassword({ user, setUser }) {
@@ -33,17 +33,30 @@ export default function ResetPassword({ user, setUser }) {
       <h1>Reset Password</h1>
       <form onSubmit={handleSubmit} className={styles.resetPassword}>
         <div className={styles.formGroup}>
-          <label>New Password:</label>
-          <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <label htmlFor="password">New Password:</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </div>
         <div className={styles.formGroup}>
-          <label>Confirm Password:</label>
-          <input type="password" id="confirm-password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+          <label htmlFor="confirm-password">Confirm Password:</label>
+          <input
+            type="password"
+            id="confirm-password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
         </div>
         {error && <div className={styles.error}>{error}</div>}
         {successMessage && <div className={styles.success}>{successMessage}</div>}
         <button type="submit" className={styles.button}>Reset Password</button>
       </form>
+      <div className={styles.backToLogin}>
+        <Link to="/auth" className={styles.button}>Back to Login</Link>
+      </div>
     </div>
   );
 }

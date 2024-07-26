@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
 async function sendPasswordResetEmail(email, temporaryPassword, temporaryToken) {
     try {
         // Construct the password reset link
-        const resetLink = `http://localhost:3000/reset-password/${temporaryToken}`;
+        const resetLink = `http://localhost:3000/auth/reset-password/${temporaryToken}`;
         
         // Send email
         await transporter.sendMail({
@@ -22,7 +22,7 @@ async function sendPasswordResetEmail(email, temporaryPassword, temporaryToken) 
             to: email,
             subject: 'Password Reset',
             html: `
-                <p><strong>CodeHive</strong></p>
+                <p><strong>Example</strong></p>
                 <br>
                 <p>Hello,</p>
                 <p>We received a request to reset your password. Below is your temporary password:</p>
@@ -34,7 +34,7 @@ async function sendPasswordResetEmail(email, temporaryPassword, temporaryToken) 
                 <p>Please note that for security reasons, this temporary password will expire in a short period of time.</p>
                 <br>
                 <p>Thank you,</p>
-                <p>CodeHive Support</p>
+                <p>Example Support</p>
             `
         });
         console.log('Password reset email sent successfully');

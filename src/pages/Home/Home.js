@@ -111,6 +111,10 @@ export default function Home() {
           <p>
             <strong><Link to="/profile/:userId">/profile/:userId</Link></strong>: User profile page.
           </p>
+          <h3 className={styles.h3styler}><Link to="/*" className={styles.apiLink}>/NotFound</Link></h3>
+          <p>
+            <strong><Link to="/*">/NotFound</Link></strong>: Custom 404 NotFound Page
+          </p>
         </div>
       </section>
     </div>

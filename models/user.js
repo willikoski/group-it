@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
-
-const SALT_ROUNDS = 12;
+const { SALT_ROUNDS } = require('../config/config'); // Import from config
 
 const userSchema = new Schema({
     name: { type: String, required: true },
@@ -11,13 +10,18 @@ const userSchema = new Schema({
         unique: true,
         trim: true,
         lowercase: true,
-        required: true
+        required: true,
+        match: [/.+@.+\..+/, 'Invalid email address']
     },
     password: {
         type: String,
         required: true,
         minlength: 8
-    }
+    },
+    passwordResetToken: {
+        token: { type: String },
+        expiresAt: { type: Date }
+    },
 }, {
     timestamps: true,
     toJSON: {
@@ -29,9 +33,13 @@ const userSchema = new Schema({
 });
 
 userSchema.pre('save', async function (next) {
-    if (!this.isModified('password')) return next();
-    this.password = await bcrypt.hash(this.password, SALT_ROUNDS);
-    next();
+    try {
+        if (!this.isModified('password')) return next();
+        this.password = await bcrypt.hash(this.password, SALT_ROUNDS);
+        next();
+    } catch (error) {
+        next(error);
+    }
 });
 
 userSchema.methods.comparePassword = async function (candidatePassword) {

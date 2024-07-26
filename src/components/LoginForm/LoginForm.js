@@ -38,6 +38,7 @@ export default function LoginForm({ setUser, setShowLogin }) {
   const handleRememberMeChange = (evt) => {
     const isChecked = evt.target.checked;
     setRememberMe(isChecked);
+    console.log('Remember Me checked:', isChecked); // Log the value to confirm
   };
 
   const handleSubmit = async (evt) => {
@@ -52,11 +53,13 @@ export default function LoginForm({ setUser, setShowLogin }) {
       return;
     }
     
+    console.log('Remember Me value on submit:', rememberMe); // Log the rememberMe value
+
     try {
       const user = await apiService.login(credentials, rememberMe);
       
       setUser(user); // Assuming `user` object contains necessary user data
-      navigate(`/profile/${user._id}`);// Redirect to the home page or dashboard
+      navigate(`/profile/${user._id}`); // Redirect to the home page or dashboard
     } catch (error) {
       setError('Log In Failed - Try Again');
     }
@@ -80,7 +83,7 @@ export default function LoginForm({ setUser, setShowLogin }) {
       <div className={styles.boxc}>
         <form className={styles.form} autoComplete="off" onSubmit={handleSubmit}>
           <div className={styles.title}>
-            <h1>DevHive</h1>
+            <h1>Example Title</h1>
           </div>
           <div className={`${styles.inputbox} ${styles.inputFilled}`}>
             <input type="text" name="email" value={credentials.email} onChange={handleChange} required />
@@ -115,9 +118,9 @@ export default function LoginForm({ setUser, setShowLogin }) {
           <div className={styles.register}>
             <p onClick={() => setShowLogin(false)}>Don't have an account? <span className={styles.registerLink}>Sign Up</span></p>
           </div>
+          <div className={styles.centerError}><p className={styles.errorMessage}>{error}</p></div>
         </form>
       </div>
-      <p className={styles.errorMessage}>{error}</p>
     </div>
   );
 }

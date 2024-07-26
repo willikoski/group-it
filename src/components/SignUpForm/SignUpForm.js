@@ -68,7 +68,7 @@ export default function SignUpForm({ setUser, setShowLogin }) {
     <div className={styles.body}>
       <div className={styles.boxc}>
         <form onSubmit={handleSubmit}>
-          <h1>DevHive</h1>
+          <h1>Example Title</h1>
           <div className={styles.inputbox}>
             <input type="text" name="name" value={name} onChange={handleChange} required />
             <label>Name</label>
@@ -101,9 +101,9 @@ export default function SignUpForm({ setUser, setShowLogin }) {
               Already have an account? Log In
             </p>
           </div>
+          <div className={styles.centerError}><p className={styles.errorMessage}>{error}</p></div>
         </form>
       </div>
-      {error && <p className={styles.errorMessage}>{error}</p>}
     </div>
   );
 }
