@@ -4,12 +4,19 @@ const BASE_URL = '/api/users';
 export function getToken() {
   const token = localStorage.getItem('token');
   if (!token) return null;
-  const payload = JSON.parse(atob(token.split('.')[1]));
-  if (payload.exp < Date.now() / 1000) {
+
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    if (payload.exp < Date.now() / 1000) {
+      localStorage.removeItem('token');
+      return null;
+    }
+    return token;
+  } catch (error) {
+    console.error('Error parsing token:', error);
     localStorage.removeItem('token');
     return null;
   }
-  return token;
 }
 
 export function getUser() {
@@ -17,9 +24,9 @@ export function getUser() {
   if (!token) return null; // Return null if token is missing
   try {
     const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload.user; // Return user object from token payload
+    return { _id: payload.userId }; // Adjust based on your token payload structure
   } catch (error) {
-    console.error("Error parsing user from token:", error);
+    console.error("Error parsing token:", error);
     return null; // Return null if there's an error parsing the token
   }
 }
@@ -50,8 +57,12 @@ export function logOut() {
 export async function signUp(userData) {
   console.log('Signing up user with data:', userData);
   const token = await usersAPI.signUp(userData);
+  
+  // Store the token in localStorage
   localStorage.setItem('token', token);
-  return getUser();
+
+  // Decode the token to get user details
+  return getUser(); // Ensure getUser() extracts user details from the token payload
 }
 
 export async function login(credentials, rememberMe) {

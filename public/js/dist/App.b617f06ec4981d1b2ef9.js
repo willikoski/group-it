@@ -396,10 +396,14 @@ function SignUpForm(_ref) {
     }
     try {
       console.log('Submitting form with data:', formData); // Log form data
-      const user = await _utilities_api_service__WEBPACK_IMPORTED_MODULE_3__.signUp(formData); // Log the response
+      const user = await _utilities_api_service__WEBPACK_IMPORTED_MODULE_3__.signUp(formData); // Log the user object
       console.log('User signed up:', user);
-      setUser(user);
-      navigate("/profile/".concat(user._id));
+      if (user) {
+        setUser(user);
+        navigate("/profile/".concat(user._id));
+      } else {
+        throw new Error('Failed to retrieve user from token.');
+      }
     } catch (err) {
       console.error('Sign Up Failed:', err); // Log the error
       setError('Sign Up Failed - Try Again');
@@ -920,21 +924,29 @@ const BASE_URL = '/api/users';
 function getToken() {
   const token = localStorage.getItem('token');
   if (!token) return null;
-  const payload = JSON.parse(atob(token.split('.')[1]));
-  if (payload.exp < Date.now() / 1000) {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    if (payload.exp < Date.now() / 1000) {
+      localStorage.removeItem('token');
+      return null;
+    }
+    return token;
+  } catch (error) {
+    console.error('Error parsing token:', error);
     localStorage.removeItem('token');
     return null;
   }
-  return token;
 }
 function getUser() {
   const token = getToken();
   if (!token) return null; // Return null if token is missing
   try {
     const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload.user; // Return user object from token payload
+    return {
+      _id: payload.userId
+    }; // Adjust based on your token payload structure
   } catch (error) {
-    console.error("Error parsing user from token:", error);
+    console.error("Error parsing token:", error);
     return null; // Return null if there's an error parsing the token
   }
 }
@@ -961,8 +973,12 @@ function logOut() {
 async function signUp(userData) {
   console.log('Signing up user with data:', userData);
   const token = await _users_api__WEBPACK_IMPORTED_MODULE_0__.signUp(userData);
+
+  // Store the token in localStorage
   localStorage.setItem('token', token);
-  return getUser();
+
+  // Decode the token to get user details
+  return getUser(); // Ensure getUser() extracts user details from the token payload
 }
 async function login(credentials, rememberMe) {
   try {
@@ -1056,13 +1072,25 @@ async function sendRequest(url) {
   }
   const token = (0,_api_service__WEBPACK_IMPORTED_MODULE_0__.getToken)();
   if (token) {
-    // Ensure options.headers is initialized if it doesn't exist
     options.headers = options.headers || {};
     options.headers.Authorization = "Bearer ".concat(token);
   }
-  const res = await fetch(url, options);
-  if (res.ok) return res.json();
-  throw new Error('Bad Request');
+  try {
+    const res = await fetch(url, options);
+    console.log("Request to ".concat(url, " with method ").concat(method, " returned status: ").concat(res.status));
+    if (res.ok) {
+      const data = await res.text(); // Change this to .text() if the response is plain text
+      console.log('Response data:', data);
+      return data; // Return the raw response if it's a token
+    } else {
+      const errorData = await res.json();
+      console.error('Error response data:', errorData);
+      throw new Error(errorData.message || 'Bad Request');
+    }
+  } catch (error) {
+    console.error('Request failed:', error);
+    throw error;
+  }
 }
 
 /***/ }),
@@ -3107,4 +3135,4 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 /******/ 	
 /******/ })()
 ;
-//# sourceMappingURL=App.7a169465dba1145ca8251703e2f20ec6.js.map
+//# sourceMappingURL=App.4d3a9acc28be3fa19c8f3d4d3b39cb15.js.map

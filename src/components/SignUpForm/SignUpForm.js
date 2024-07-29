@@ -25,22 +25,26 @@ export default function SignUpForm({ setUser, setShowLogin }) {
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
-
+  
     const emailError = validateEmail(formData.email);
     const passwordError = validatePassword(formData.password);
-
+  
     if (emailError || passwordError) {
       setErrors({ email: emailError, password: passwordError });
       setError('Please fix the errors in the form.');
       return;
     }
-
+  
     try {
       console.log('Submitting form with data:', formData); // Log form data
-      const user = await apiService.signUp(formData); // Log the response
+      const user = await apiService.signUp(formData); // Log the user object
       console.log('User signed up:', user);
-      setUser(user);
-      navigate(`/profile/${user._id}`);
+      if (user) {
+        setUser(user);
+        navigate(`/profile/${user._id}`);
+      } else {
+        throw new Error('Failed to retrieve user from token.');
+      }
     } catch (err) {
       console.error('Sign Up Failed:', err); // Log the error
       setError('Sign Up Failed - Try Again');

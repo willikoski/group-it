@@ -8,9 +8,9 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const SALT_ROUNDS = 12;
 
 function createJWT(user, rememberMe) {
-  let expiresIn = '24h'; // Default expiration time (24 hours)
+  let expiresIn = '24h'; // 24h default
   if (rememberMe) {
-    expiresIn = '30d'; // 30 days expiration if rememberMe is true
+    expiresIn = '30d'; // if remember me is set how long?
   }
   return jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn });
 }
@@ -134,7 +134,7 @@ async updatePasswordWithToken(req, res) {
       }
 
       // Update user with the new password and clear the reset token
-      user.password = newPassword; // No manual hashing needed here
+      user.password = newPassword; // hashing is done anyways in model
       user.passwordResetToken = { token: null, expiresAt: null }; // Clear the reset token
 
       await user.save(); // Middleware will hash the password
